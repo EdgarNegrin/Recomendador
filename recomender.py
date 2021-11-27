@@ -1,14 +1,16 @@
 import numpy as np
+from numpy.core import numeric
+from numpy.core.fromnumeric import sort
 from numpy.lib.function_base import append
 
 class recomender:
-  def __init__(self, nameFile):
+  def __init__(self, nameFile, vecinos):
     self.matrix = None
-    self.vecinos = 0
+    self.vecinos = vecinos
     self.medias = []
+    self.vacios = []
     self.loadFile(nameFile)
     self.similitud = np.zeros(shape=(len(self.matrix),len(self.matrix)))
-
 
   def pearson(self):
     # Calculo de items a comparar
@@ -48,7 +50,6 @@ class recomender:
         
         similitud = solucion[0] / (solucion[1] * solucion[2])
         self.similitud[i][k] = similitud
-        print(similitud)
 
 
   def coseno(self):
@@ -101,20 +102,50 @@ class recomender:
         similitud = (np.sqrt(sum(sumatorio)))
         
         self.similitud[i][k] = similitud
-        print(i, k, similitud)
   
+
+  def prediccionSimple(self):
+    sumatorio = ([], [])
+    prediccion = []
+    posPediccion = [()]
+    
+    for i in range(len(self.vacios)):
+      vecinos = self.vecinosProximos(self.vacios[i][0])
+      for j in range(self.vecinos):
+        # print(str(self.similitud[self.vacios[i][0]][vecinos[j]]) + "*" + str(self.matrix[vecinos[j]][self.vacios[i][1]]))
+        sumatorio[0].append(self.similitud[self.vacios[i][0]][vecinos[j]] * self.matrix[vecinos[j]][self.vacios[i][1]])
+        sumatorio[1].append(abs(self.similitud[self.vacios[i][0]][vecinos[j]]))
+      prediccion.append((sum(sumatorio[0])) / (sum(sumatorio[1])))
+    
+    
+  def vecinosProximos(self, indicePersona):
+    similitudSorted = self.similitud[indicePersona]
+    similitudSorted = np.delete(similitudSorted, indicePersona)
+    similitudSorted = np.sort(similitudSorted)[::-1]
+    vecinosSimilitud = []
+    
+    for i in range(self.vecinos): ##### Modificarlo para el caso en que exitan similitudes iguales
+      vecinosSimilitud.append((np.where(self.similitud[indicePersona] == similitudSorted[i])[0][0]))
+    
+    return vecinosSimilitud
 
   def loadFile(self, nameFile):
     textFile = open(nameFile, 'r')
     datos = ''.join(textFile.readlines())
     vector = datos.split("\n")
-    for i in range(0, len(vector)):
-       vector[i] = vector[i].split(" ")
-       for j in range(0, len(vector[i])):
-         if(vector[i][j].isdigit()):
-           vector[i][j] = int(vector[i][j])
-         else:
-           vector[i][j] = -1
+    for i in range(len(vector)):
+      suma = 0
+      numOfDigits = 0
+      vector[i] = vector[i].split(" ")
+      for j in range(len(vector[i])):
+        if(vector[i][j].isdigit()):
+          vector[i][j] = int(vector[i][j])
+          suma += vector[i][j]
+          numOfDigits += 1
+        else:
+          vector[i][j] = -1
+          self.vacios.append((i,j))
+      self.medias.append(suma / numOfDigits)
     self.matrix = vector
     
     textFile.close()
