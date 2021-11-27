@@ -2,7 +2,6 @@ import numpy as np
 from numpy.core import numeric
 from numpy.core.fromnumeric import sort
 from numpy.lib.function_base import append
-from numpy.matrixlib.defmatrix import matrix
 
 class recomender:
   def __init__(self, nameFile, vecinos):
@@ -103,7 +102,7 @@ class recomender:
     sumatorio = ([], [])
     
     for i in range(len(self.vacios)):
-      vecinos = self.vecinosProximos(self.vacios[i][0])
+      vecinos = self.vecinosProximos(self.vacios[i][0], self.vacios[i][1])
       for j in range(self.vecinos):
         sumatorio[0].append(self.similitud[self.vacios[i][0]][vecinos[j]] * self.matrix[vecinos[j]][self.vacios[i][1]])
         sumatorio[1].append(abs(self.similitud[self.vacios[i][0]][vecinos[j]]))

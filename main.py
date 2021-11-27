@@ -1,13 +1,44 @@
 import argparse
 from recomender import recomender
 
-parser = argparse.ArgumentParser(description='Recomend.')
-parser.add_argument('file',
-                    help='Load the file')
+parser = argparse.ArgumentParser(description='Recomendador')
+parser.add_argument('file', help='Load the file')
+parser.add_argument('-M', '--metrica', help='Tipo de metrica', choices=['pearson', 'coseno', 'euclidea'], required=True)
+parser.add_argument('-V', '--vecinos', help='Numero de vecinos', required=True)
+parser.add_argument('-P', '--prediccion', help='Tipo de prediccion', choices=['simple', 'media'], required=True)
 
 args = parser.parse_args()
 
-rec = recomender(args.file, 2)
-rec.coseno()
-rec.prediccionMedia()
+if int(args.vecinos) < 2:
+  print("Es necesario un numero de vecinos superior a 1")
+  exit()
+
+rec = recomender(args.file, int(args.vecinos))
+
+###############################
+
+# Correlacion de Pearson
+if args.metrica == 'pearson': 
+  rec.pearson()
+
+# Distancia coseno
+if args.metrica == 'coseno': 
+  rec.coseno()
+  
+# Distancia euclidea
+if args.metrica == 'euclidea': 
+  rec.euclidea()
+
+###############################
+
+# Prediccion simple
+if args.prediccion == 'simple':
+  rec.prediccionSimple()
+  
+# Prediccion simple
+if args.prediccion == 'media':
+  rec.prediccionMedia()
+
+###############################
+
 rec.showInfo()
