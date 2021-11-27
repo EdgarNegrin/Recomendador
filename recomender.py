@@ -6,6 +6,7 @@ class recomender:
     self.vecinos = vecinos
     self.medias = []
     self.vacios = []
+    self.FlagEuclidea = False
     self.loadFile(nameFile)
     self.similitud = np.empty(shape=(len(self.matrix),len(self.matrix)))
     self.similitudSorted = []
@@ -73,6 +74,7 @@ class recomender:
 
 
   def euclidea(self):
+    self.FlagEuclidea = True
     # Calculo de items a comparar
     similitud = 0
     for i in range(len(self.matrix)):
@@ -142,7 +144,10 @@ class recomender:
   def similitudSort(self):
     for i in range(len(self.similitud)):
       self.similitudSorted.append(list(enumerate(self.similitud[i])))
-      self.similitudSorted[i].sort(key = lambda x: x[1], reverse=True)
+      if self.FlagEuclidea: # Si la metrica usada es euclidea debemos invertir el orden de preferencia
+        self.similitudSorted[i].sort(key = lambda x: x[1], reverse=False)
+      else:
+        self.similitudSorted[i].sort(key = lambda x: x[1], reverse=True)
 
 
   def showInfo(self):
@@ -152,7 +157,9 @@ class recomender:
         print(str(round(self.matrix[i][j], 2)), end="\t")
       print()
     print()
+    
     for i in range(len(self.similitud)):
+      print("--------------------------------------------", end="\n\n")
       print("Similaridades con Persona " + str(i))
       for j in range(len(self.similitud[i])):
         print("Persona" + str(j) + ": " + str(round(self.similitud[i][j], 2)))
