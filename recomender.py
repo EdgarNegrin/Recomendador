@@ -2,6 +2,7 @@ import numpy as np
 from numpy.core import numeric
 from numpy.core.fromnumeric import sort
 from numpy.lib.function_base import append
+from numpy.matrixlib.defmatrix import matrix
 
 class recomender:
   def __init__(self, nameFile, vecinos):
@@ -21,8 +22,6 @@ class recomender:
       for k in range(len(self.matrix)):
         persona1 = self.matrix[i]
         persona2 = self.matrix[k]
-        media1 = 0
-        media2 = 0
         indices = []
         sumatorios = [[], [], []]
         solucion = []
@@ -30,20 +29,12 @@ class recomender:
         for j in range(len(persona1)):
           if (persona1[j] != -1) and (persona2[j] != -1):
             indices.append(j)
-      
-        # Calculo de las medias
-        for j in indices:
-          media1 += persona1[j]
-          media2 += persona2[j]
-        
-        media1 = media1 / len(indices)
-        media2 = media2 / len(indices)
         
         # Calculo
         for j in indices:
-          sumatorios[0].append((persona1[j] - media1) * (persona2[j] - media2))
-          sumatorios[1].append((persona1[j] - media1) ** 2)
-          sumatorios[2].append((persona2[j] - media2) ** 2)
+          sumatorios[0].append((persona1[j] - self.medias[i]) * (persona2[j] - self.medias[k]))
+          sumatorios[1].append((persona1[j] - self.medias[i]) ** 2)
+          sumatorios[2].append((persona2[j] - self.medias[k]) ** 2)
         
         solucion.append(sum(sumatorios[0]))
         solucion.append(np.sqrt(sum(sumatorios[1])))
@@ -110,12 +101,10 @@ class recomender:
 
   def prediccionSimple(self):
     sumatorio = ([], [])
-    prediccion = []
     
     for i in range(len(self.vacios)):
       vecinos = self.vecinosProximos(self.vacios[i][0])
       for j in range(self.vecinos):
-        # print(str(self.similitud[self.vacios[i][0]][vecinos[j]]) + "*" + str(self.matrix[vecinos[j]][self.vacios[i][1]]))
         sumatorio[0].append(self.similitud[self.vacios[i][0]][vecinos[j]] * self.matrix[vecinos[j]][self.vacios[i][1]])
         sumatorio[1].append(abs(self.similitud[self.vacios[i][0]][vecinos[j]]))
       self.matrix[self.vacios[i][0]][self.vacios[i][1]] = (sum(sumatorio[0])) / (sum(sumatorio[1]))
@@ -123,19 +112,22 @@ class recomender:
 
   def prediccionMedia(self):
     sumatorio = ([], [])
-    prediccion = []
     
     for i in range(len(self.vacios)):
-      vecinos = self.vecinosProximos(self.vacios[i][0])
+      vecinos = self.vecinosProximos(self.vacios[i][0], self.vacios[i][1])
       for j in range(self.vecinos):
-        # print(str(self.similitud[self.vacios[i][0]][vecinos[j]]) + " * (" + str(self.matrix[vecinos[j]][self.vacios[i][1]]) + "-" + str(self.medias[vecinos[j]]))
         sumatorio[0].append(self.similitud[self.vacios[i][0]][vecinos[j]] * (self.matrix[vecinos[j]][self.vacios[i][1]] - self.medias[vecinos[j]]))
         sumatorio[1].append(abs(self.similitud[self.vacios[i][0]][vecinos[j]]))
       self.matrix[self.vacios[i][0]][self.vacios[i][1]] = self.medias[self.vacios[i][0]] + ((sum(sumatorio[0])) / (sum(sumatorio[1])))
     
-  def vecinosProximos(self, indicePersona): ## Eliminar los vecinos que no tengan el item
+    
+  def vecinosProximos(self, indicePersona, item): 
     similitudSorted = self.similitudSorted[indicePersona].copy()
-    similitudSorted.remove(similitudSorted[indicePersona])
+    # Eliminamos los vecinos que no tengan el item
+    for j in self.vacios:
+      if (j[1] == item):
+        similitudSorted.remove(similitudSorted[j[0]])
+      
     vecinosSimilitud = []
     for i in range(self.vecinos):
       vecinosSimilitud.append(similitudSorted[i][0])

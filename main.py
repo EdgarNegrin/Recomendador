@@ -8,6 +8,6 @@ parser.add_argument('file',
 args = parser.parse_args()
 
 rec = recomender(args.file, 2)
-rec.pearson()
+rec.coseno()
 rec.prediccionMedia()
 rec.showInfo()
