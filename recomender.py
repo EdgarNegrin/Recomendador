@@ -10,7 +10,8 @@ class recomender:
     self.medias = []
     self.vacios = []
     self.loadFile(nameFile)
-    self.similitud = np.zeros(shape=(len(self.matrix),len(self.matrix)))
+    self.similitud = np.empty(shape=(len(self.matrix),len(self.matrix)))
+    self.similitudSorted = []
 
   def pearson(self):
     # Calculo de items a comparar
@@ -50,6 +51,7 @@ class recomender:
         
         similitud = solucion[0] / (solucion[1] * solucion[2])
         self.similitud[i][k] = similitud
+    self.similitudSort()
 
 
   def coseno(self):
@@ -79,6 +81,7 @@ class recomender:
         
         similitud = solucion[0] / (solucion[1] * solucion[2])
         self.similitud[i][k] = similitud
+    self.similitudSort()
 
 
   def euclidea(self):
@@ -102,12 +105,12 @@ class recomender:
         similitud = (np.sqrt(sum(sumatorio)))
         
         self.similitud[i][k] = similitud
+    self.similitudSort()
   
 
   def prediccionSimple(self):
     sumatorio = ([], [])
     prediccion = []
-    posPediccion = [()]
     
     for i in range(len(self.vacios)):
       vecinos = self.vecinosProximos(self.vacios[i][0])
@@ -115,19 +118,56 @@ class recomender:
         # print(str(self.similitud[self.vacios[i][0]][vecinos[j]]) + "*" + str(self.matrix[vecinos[j]][self.vacios[i][1]]))
         sumatorio[0].append(self.similitud[self.vacios[i][0]][vecinos[j]] * self.matrix[vecinos[j]][self.vacios[i][1]])
         sumatorio[1].append(abs(self.similitud[self.vacios[i][0]][vecinos[j]]))
-      prediccion.append((sum(sumatorio[0])) / (sum(sumatorio[1])))
+      self.matrix[self.vacios[i][0]][self.vacios[i][1]] = (sum(sumatorio[0])) / (sum(sumatorio[1]))
+  
+
+  def prediccionMedia(self):
+    sumatorio = ([], [])
+    prediccion = []
     
+    for i in range(len(self.vacios)):
+      vecinos = self.vecinosProximos(self.vacios[i][0])
+      for j in range(self.vecinos):
+        # print(str(self.similitud[self.vacios[i][0]][vecinos[j]]) + " * (" + str(self.matrix[vecinos[j]][self.vacios[i][1]]) + "-" + str(self.medias[vecinos[j]]))
+        sumatorio[0].append(self.similitud[self.vacios[i][0]][vecinos[j]] * (self.matrix[vecinos[j]][self.vacios[i][1]] - self.medias[vecinos[j]]))
+        sumatorio[1].append(abs(self.similitud[self.vacios[i][0]][vecinos[j]]))
+      self.matrix[self.vacios[i][0]][self.vacios[i][1]] = self.medias[self.vacios[i][0]] + ((sum(sumatorio[0])) / (sum(sumatorio[1])))
     
-  def vecinosProximos(self, indicePersona):
-    similitudSorted = self.similitud[indicePersona]
-    similitudSorted = np.delete(similitudSorted, indicePersona)
-    similitudSorted = np.sort(similitudSorted)[::-1]
+  def vecinosProximos(self, indicePersona): ## Eliminar los vecinos que no tengan el item
+    similitudSorted = self.similitudSorted[indicePersona].copy()
+    similitudSorted.remove(similitudSorted[indicePersona])
     vecinosSimilitud = []
-    
-    for i in range(self.vecinos): ##### Modificarlo para el caso en que exitan similitudes iguales
-      vecinosSimilitud.append((np.where(self.similitud[indicePersona] == similitudSorted[i])[0][0]))
+    for i in range(self.vecinos):
+      vecinosSimilitud.append(similitudSorted[i][0])
     
     return vecinosSimilitud
+
+
+  def similitudSort(self):
+    for i in range(len(self.similitud)):
+      self.similitudSorted.append(list(enumerate(self.similitud[i])))
+      self.similitudSorted[i].sort(key = lambda x: x[1], reverse=True)
+
+
+  def showInfo(self):
+    print("Matriz Predicciones", end="\n\n")
+    for i in range(len(self.matrix)):
+      for j in range(len(self.matrix[i])):
+        print(str(round(self.matrix[i][j], 2)), end="\t")
+      print()
+      
+    print("\n\nMatriz de similitud", end="\n\n")
+    for i in range(len(self.similitud)):
+      for j in range(len(self.similitud[i])):
+        print(str(round(self.similitud[i][j], 2)), end="\t")
+      print()
+    
+    print("\n\nMatriz de similitud ordenada", end="\n\n")
+    for i in range(len(self.similitudSorted)):
+      for j in range(len(self.similitudSorted[i])):
+        print(str(round(self.similitudSorted[i][j][1], 2)), end="\t")
+      print()
+
 
   def loadFile(self, nameFile):
     textFile = open(nameFile, 'r')

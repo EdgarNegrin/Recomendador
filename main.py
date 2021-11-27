@@ -9,4 +9,5 @@ args = parser.parse_args()
 
 rec = recomender(args.file, 2)
 rec.pearson()
-rec.prediccionSimple()
+rec.prediccionMedia()
+rec.showInfo()
