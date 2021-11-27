@@ -1,7 +1,4 @@
 import numpy as np
-from numpy.core import numeric
-from numpy.core.fromnumeric import sort
-from numpy.lib.function_base import append
 
 class recomender:
   def __init__(self, nameFile, vecinos):
@@ -12,6 +9,7 @@ class recomender:
     self.loadFile(nameFile)
     self.similitud = np.empty(shape=(len(self.matrix),len(self.matrix)))
     self.similitudSorted = []
+    self.similitudVecinos = []
 
   def pearson(self):
     # Calculo de items a comparar
@@ -104,7 +102,8 @@ class recomender:
     for i in range(len(self.vacios)):
       vecinos = self.vecinosProximos(self.vacios[i][0], self.vacios[i][1])
       for j in range(self.vecinos):
-        sumatorio[0].append(self.similitud[self.vacios[i][0]][vecinos[j]] * self.matrix[vecinos[j]][self.vacios[i][1]])
+        sumatorio[0].append(self.similitud[self.vacios[i][0]][vecinos[j]] * 
+                            self.matrix[vecinos[j]][self.vacios[i][1]])
         sumatorio[1].append(abs(self.similitud[self.vacios[i][0]][vecinos[j]]))
       self.matrix[self.vacios[i][0]][self.vacios[i][1]] = (sum(sumatorio[0])) / (sum(sumatorio[1]))
   
@@ -115,22 +114,28 @@ class recomender:
     for i in range(len(self.vacios)):
       vecinos = self.vecinosProximos(self.vacios[i][0], self.vacios[i][1])
       for j in range(self.vecinos):
-        sumatorio[0].append(self.similitud[self.vacios[i][0]][vecinos[j]] * (self.matrix[vecinos[j]][self.vacios[i][1]] - self.medias[vecinos[j]]))
+        sumatorio[0].append(self.similitud[self.vacios[i][0]][vecinos[j]] * 
+                            (self.matrix[vecinos[j]][self.vacios[i][1]] - self.medias[vecinos[j]]))
         sumatorio[1].append(abs(self.similitud[self.vacios[i][0]][vecinos[j]]))
-      self.matrix[self.vacios[i][0]][self.vacios[i][1]] = self.medias[self.vacios[i][0]] + ((sum(sumatorio[0])) / (sum(sumatorio[1])))
+      self.matrix[self.vacios[i][0]][self.vacios[i][1]] = self.medias[self.vacios[i][0]] + ((sum(sumatorio[0])) / 
+                                                                                            (sum(sumatorio[1])))
     
     
   def vecinosProximos(self, indicePersona, item): 
     similitudSorted = self.similitudSorted[indicePersona].copy()
     # Eliminamos los vecinos que no tengan el item
-    for j in self.vacios:
-      if (j[1] == item):
-        similitudSorted.remove(similitudSorted[j[0]])
-      
+    for i in similitudSorted:
+      eliminated = True
+      for j in self.vacios:
+        if (j[1] == item) and (j[0] == i[0]) and eliminated:
+          similitudSorted.remove(i)
+          eliminated = False
+
     vecinosSimilitud = []
     for i in range(self.vecinos):
       vecinosSimilitud.append(similitudSorted[i][0])
-    
+
+    self.similitudVecinos.append([indicePersona, vecinosSimilitud])
     return vecinosSimilitud
 
 
@@ -146,18 +151,19 @@ class recomender:
       for j in range(len(self.matrix[i])):
         print(str(round(self.matrix[i][j], 2)), end="\t")
       print()
-      
-    print("\n\nMatriz de similitud", end="\n\n")
+    print()
     for i in range(len(self.similitud)):
+      print("Similaridades con Persona " + str(i))
       for j in range(len(self.similitud[i])):
-        print(str(round(self.similitud[i][j], 2)), end="\t")
+        print("Persona" + str(j) + ": " + str(round(self.similitud[i][j], 2)))
       print()
-    
-    print("\n\nMatriz de similitud ordenada", end="\n\n")
-    for i in range(len(self.similitudSorted)):
-      for j in range(len(self.similitudSorted[i])):
-        print(str(round(self.similitudSorted[i][j][1], 2)), end="\t")
-      print()
+      for k in range(len(self.similitudVecinos)):
+        if self.similitudVecinos[k][0] == i: # Comprobamos si estan calculados los vecinos de la persona
+          print("Similaridades de los " + str(self.vecinos) + " vecinos con Persona " + str(i))
+          for j in self.similitudVecinos[k][1]: # Recorremos los vecinos
+            print("Persona" + str(j) + ": " + str(round(self.similitud[i][j], 2)))
+          print()
+          break
 
 
   def loadFile(self, nameFile):
@@ -180,5 +186,4 @@ class recomender:
     self.matrix = vector
     
     textFile.close()
-
   
