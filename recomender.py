@@ -46,7 +46,7 @@ class recomender:
         solucion.append(np.sqrt(sum(sumatorios[2])))
         
         similitud = solucion[0] / (solucion[1] * solucion[2])
-        self.similitud[i][k] = similitud
+        self.similitud[i][k] = (similitud - (-1)) / (1 - (-1))
     self.similitudSort()
 
 
@@ -98,7 +98,7 @@ class recomender:
           sumatorio.append((persona1[j] - persona2[j]) ** 2)
         similitud = (np.sqrt(sum(sumatorio)))
         
-        self.similitud[i][k] = similitud
+        self.similitud[i][k] = 1 / (1 + np.sqrt(similitud))
     self.similitudSort()
   
 
@@ -174,6 +174,11 @@ class recomender:
             print("Persona" + str(j) + ": " + str(round(self.similitud[i][j], 2)))
           print()
           break
+    print()
+    print("Predicciones", end="\n\n")
+    for i  in self.vacios:
+      print("Persona" + str(i[0]) + " - item" + str(i[1]) + ": " + str(round(self.matrix[i[0]][i[1]], 2)))
+    print()
 
 
   def loadFile(self, nameFile):

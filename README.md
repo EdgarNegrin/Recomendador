@@ -85,3 +85,6 @@ A partir de la lista modificada y ordenada extraemos los vecinos más cercanos y
 
 
 **loadFile**: metodo encargado de cargar la matriz original, en este metodo también establecemos las medias de cada una de las personas y las valoraciones que estan vacias(almacenamos la persona y el item) para calcularlas posteriormente.
+
+
+**NOTA**: para el calculo de la media se han usado todos los items valorados por cada persona.
