@@ -1,21 +1,28 @@
+#
+# Nombre: Edgar Negrin Gonzalez
+# Correo: alu0101210964@ull.edu.es
+#
+# Practica: Recomendador
+#
+# recomender.py: fichero con clase recomender
+#
+
 import numpy as np
 
 class recomender:
   def __init__(self, nameFile, vecinos):
-    self.matrix = None
-    self.vecinos = vecinos
-    self.medias = []
-    self.vacios = []
-    self.FlagEuclidea = False
+    self.matrix = None 
+    self.vecinos = vecinos # Numero de vecinos
+    self.medias = [] # Medias de cada persona
+    self.vacios = [] # Persona e Item de cada valoracion vacia
+    self.FlagEuclidea = False # Flag para comparacion 
     self.loadFile(nameFile)
-    self.similitud = np.empty(shape=(len(self.matrix),len(self.matrix)))
-    self.similitudSorted = []
-    self.similitudVecinos = []
+    self.similitud = np.empty(shape=(len(self.matrix),len(self.matrix))) # Matriz similitud
+    self.similitudSorted = [] # Matriz similitud ordenada
+    self.similitudVecinos = [] # Vecinos de cada persona(con algun item vacio)
 
   def pearson(self):
-    # Calculo de items a comparar
     similitud = 0
-    
     for i in range(len(self.matrix)):
       for k in range(len(self.matrix)):
         persona1 = self.matrix[i]
@@ -44,7 +51,6 @@ class recomender:
 
 
   def coseno(self):
-    # Calculo de items a comparar
     similitud = 0
     for i in range(len(self.matrix)):
       for k in range(len(self.matrix)):
@@ -75,7 +81,6 @@ class recomender:
 
   def euclidea(self):
     self.FlagEuclidea = True
-    # Calculo de items a comparar
     similitud = 0
     for i in range(len(self.matrix)):
       for k in range(len(self.matrix)):
@@ -165,7 +170,7 @@ class recomender:
       for k in range(len(self.similitudVecinos)):
         if self.similitudVecinos[k][0] == i: # Comprobamos si estan calculados los vecinos de la persona
           print("Similaridades de los " + str(self.vecinos) + " vecinos con Persona " + str(i))
-          for j in self.similitudVecinos[k][1]: # Recorremos los vecinos
+          for j in self.similitudVecinos[k][1]: 
             print("Persona" + str(j) + ": " + str(round(self.similitud[i][j], 2)))
           print()
           break

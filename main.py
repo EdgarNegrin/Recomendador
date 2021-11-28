@@ -1,3 +1,16 @@
+#
+# Nombre: Edgar Negrin Gonzalez
+# Correo: alu0101210964@ull.edu.es
+#
+# Practica: Recomendador
+#
+# main.py: fichero principal para ejecutar el recomendador
+#
+#
+# Ejemplo de uso: python3 main.py matriz1.txt -M pearson -V 2 -P media 
+# Fichero: matriz1.txt, Metrica: pearson, Numero de vecinos: 2, Prediccion: media
+#
+
 import argparse
 from recomender import recomender
 
