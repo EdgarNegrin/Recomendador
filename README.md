@@ -1,5 +1,8 @@
 # Recomendador
 
+Nombre: Edgar Negrin Gonzalez
+Correo: alu0101210964@ull.edu.es
+
 * Ejemplo de uso:
 
 python3 main.py ./matriz/matriz1.txt -M pearson -V 3 -P media 
