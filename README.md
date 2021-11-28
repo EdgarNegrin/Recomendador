@@ -8,26 +8,26 @@ Salida:
 
 Matriz Predicciones
 
-5       3       4       4       4.85
-3       1       2       3       3
-4       3       4       3       5
-3       3       1       5       4
-1       5       5       2       1
+5       3       4       4       4.85  
+3       1       2       3       3  
+4       3       4       3       5  
+3       3       1       5       4  
+1       5       5       2       1  
 
-Similaridades con Persona 0
-Persona0: 1.0
-Persona1: 0.84
-Persona2: 0.61
-Persona3: 0.0
-Persona4: -0.77
-
-Similaridades de los 2 vecinos con Persona 0
-Persona1: 0.84
-Persona2: 0.61
+Similaridades con Persona 0  
+Persona0: 1.0  
+Persona1: 0.84   
+Persona2: 0.61  
+Persona3: 0.0  
+Persona4: -0.77  
+  
+Similaridades de los 2 vecinos con Persona 0  
+Persona1: 0.84  
+Persona2: 0.61  
     
-    .
-    .
-    .
+.
+.
+.
 
 
 # Descripción del código
