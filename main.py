@@ -22,7 +22,7 @@ parser.add_argument('-P', '--prediccion', help='Tipo de prediccion', choices=['s
 
 args = parser.parse_args()
 
-if int(args.vecinos) < 2:
+if int(args.vecinos) < 3:
   print("Es necesario un numero de vecinos superior a 1")
   exit()
 
