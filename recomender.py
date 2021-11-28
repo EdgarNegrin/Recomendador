@@ -91,7 +91,6 @@ class recomender:
         # Calculo
         for j in indices:
           sumatorio.append((persona1[j] - persona2[j]) ** 2)
-        
         similitud = (np.sqrt(sum(sumatorio)))
         
         self.similitud[i][k] = similitud
@@ -122,6 +121,14 @@ class recomender:
       self.matrix[self.vacios[i][0]][self.vacios[i][1]] = self.medias[self.vacios[i][0]] + ((sum(sumatorio[0])) / 
                                                                                             (sum(sumatorio[1])))
     
+  def similitudSort(self):
+    for i in range(len(self.similitud)):
+      self.similitudSorted.append(list(enumerate(self.similitud[i])))
+      if self.FlagEuclidea: # Si la metrica usada es euclidea debemos invertir el orden de preferencia
+        self.similitudSorted[i].sort(key = lambda x: x[1], reverse=False)
+      else:
+        self.similitudSorted[i].sort(key = lambda x: x[1], reverse=True)
+    
     
   def vecinosProximos(self, indicePersona, item): 
     similitudSorted = self.similitudSorted[indicePersona].copy()
@@ -141,17 +148,8 @@ class recomender:
     return vecinosSimilitud
 
 
-  def similitudSort(self):
-    for i in range(len(self.similitud)):
-      self.similitudSorted.append(list(enumerate(self.similitud[i])))
-      if self.FlagEuclidea: # Si la metrica usada es euclidea debemos invertir el orden de preferencia
-        self.similitudSorted[i].sort(key = lambda x: x[1], reverse=False)
-      else:
-        self.similitudSorted[i].sort(key = lambda x: x[1], reverse=True)
-
-
   def showInfo(self):
-    print("Matriz Predicciones", end="\n\n")
+    print("Matriz de utilidad", end="\n\n")
     for i in range(len(self.matrix)):
       for j in range(len(self.matrix[i])):
         print(str(round(self.matrix[i][j], 2)), end="\t")
