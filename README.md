@@ -1,6 +1,6 @@
 # Recomendador
 
-Nombre: Edgar Negrin Gonzalez
+Nombre: Edgar Negrin Gonzalez  
 Correo: alu0101210964@ull.edu.es
 
 * Ejemplo de uso:
