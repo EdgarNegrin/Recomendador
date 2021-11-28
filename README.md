@@ -2,7 +2,7 @@
 
 * Ejemplo de uso:
 
-python3 main.py matriz1.txt -M pearson -V 2 -P media 
+python3 main.py ./matriz/matriz1.txt -M pearson -V 2 -P media 
 
 Salida:
 
