@@ -96,9 +96,9 @@ class recomender:
         # Calculo
         for j in indices:
           sumatorio.append((persona1[j] - persona2[j]) ** 2)
-        similitud = (np.sqrt(sum(sumatorio)))
+        similitud = (np.sqrt(sum(sumatorio))) 
         
-        self.similitud[i][k] = 1 / (1 + np.sqrt(similitud))
+        self.similitud[i][k] = (-similitud / np.sqrt(25 * len(indices))) + 1 
     self.similitudSort()
   
 
@@ -129,25 +129,16 @@ class recomender:
   def similitudSort(self):
     for i in range(len(self.similitud)):
       self.similitudSorted.append(list(enumerate(self.similitud[i])))
-      if self.FlagEuclidea: # Si la metrica usada es euclidea debemos invertir el orden de preferencia
-        self.similitudSorted[i].sort(key = lambda x: x[1], reverse=False)
-      else:
-        self.similitudSorted[i].sort(key = lambda x: x[1], reverse=True)
+      self.similitudSorted[i].sort(key = lambda x: x[1], reverse=True)
     
     
   def vecinosProximos(self, indicePersona, item): 
-    similitudSorted = self.similitudSorted[indicePersona].copy()
-    # Eliminamos los vecinos que no tengan el item
-    for i in similitudSorted:
-      eliminated = True
-      for j in self.vacios:
-        if (j[1] == item) and (j[0] == i[0]) and eliminated:
-          similitudSorted.remove(i)
-          eliminated = False
-
+    similitudSorted = self.similitudSorted[indicePersona]
+    # Eliminamos los vecinos que no tengan el item 
+    vecinosFiltrados = list(filter(lambda x: self.matrix[x[0]][item] != -1, similitudSorted))
     vecinosSimilitud = []
     for i in range(self.vecinos):
-      vecinosSimilitud.append(similitudSorted[i][0])
+      vecinosSimilitud.append(vecinosFiltrados[i][0])
 
     self.similitudVecinos.append([indicePersona, vecinosSimilitud])
     return vecinosSimilitud

@@ -52,7 +52,7 @@ Se ha creado un metodo para cada una de las posibles metricas disponibles(Pearso
 
 * **pearson**: metodo que calcula la similitud haciendo uso de la metrica de Pearson comienza recorriendo la matriz, por cada iteración calculamos la similitud entre 2 personas(2 filas).
 
-Debemos obtener los indices de los items que tienen metricas ya que con ellos realizaremos una iteración que calculara los sumatorios expuestos en la ecuación que se nos ha facilitado(3 sumatorios). A continuación debemos calcular las operaciones restantes fuera del sumatorio, el valor resultado(similitud de las dos personas) de la operación se almacena en un atributo matriz en la posicion correspondiente a las personas de las que se esta calculando su similitud.
+Debemos obtener los indices de los items que tienen metricas ya que con ellos realizaremos una iteración que calculara los sumatorios expuestos en la ecuación que se nos ha facilitado(3 sumatorios). A continuación debemos calcular las operaciones restantes fuera del sumatorio, el valor resultado(similitud de las dos personas normalizado) de la operación se almacena en un atributo matriz en la posicion correspondiente a las personas de las que se esta calculando su similitud.
 
 * **coseno**: metodo que calcula la similitud haciendo uso de la metrica del coseno comienza recorriendo la matriz de la misma manera que Pearson.
 
@@ -60,7 +60,7 @@ Se realiza todo de la misma manera salvo las operaciones, en esta metrica no har
 
 * **euclidea**: metodo que calcula la similitud haciendo uso de la metrica de Euclides comienza estableciendo un flag a 'True' ya que sera necesario a la hora de realizar la ordenación de las similitudes.
 
-Se realiza todo de la misma manera salvo las operaciones, seguimos la ecuación proporcionada para el calculo de la similitud y lo almacenamos de igual que anteriormente.
+Se realiza todo de la misma manera salvo las operaciones, seguimos la ecuación proporcionada para el calculo de la similitud y lo almacenamos de igual que anteriormente(normalizando).
 
 
 
