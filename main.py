@@ -7,8 +7,8 @@
 # main.py: fichero principal para ejecutar el recomendador
 #
 #
-# Ejemplo de uso: python3 main.py ./matriz/matriz1.txt -M pearson -V 2 -P media 
-# Fichero: ./matriz/matriz1.txt, Metrica: pearson, Numero de vecinos: 2, Prediccion: media
+# Ejemplo de uso: python3 main.py ./matriz/matriz1.txt -M pearson -V 3 -P media 
+# Fichero: ./matriz/matriz1.txt, Metrica: pearson, Numero de vecinos: 3, Prediccion: media
 #
 
 import argparse

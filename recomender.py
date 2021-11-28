@@ -15,7 +15,6 @@ class recomender:
     self.vecinos = vecinos # Numero de vecinos
     self.medias = [] # Medias de cada persona
     self.vacios = [] # Persona e Item de cada valoracion vacia
-    self.FlagEuclidea = False # Flag para comparacion 
     self.loadFile(nameFile)
     self.similitud = np.empty(shape=(len(self.matrix),len(self.matrix))) # Matriz similitud
     self.similitudSorted = [] # Matriz similitud ordenada
@@ -75,12 +74,11 @@ class recomender:
         solucion.append(np.sqrt(sum(sumatorios[2])))
         
         similitud = solucion[0] / (solucion[1] * solucion[2])
-        self.similitud[i][k] = similitud
+        self.similitud[i][k] = (similitud - (-1)) / (1 - (-1))
     self.similitudSort()
 
 
   def euclidea(self):
-    self.FlagEuclidea = True
     similitud = 0
     for i in range(len(self.matrix)):
       for k in range(len(self.matrix)):
